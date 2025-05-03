@@ -1,6 +1,12 @@
 from flask import Flask, request, jsonify
+from openai import OpenAI
+import google.generativeai as genai
+import anthropic
+
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/classify_scam": {"origins": "chrome-extension://gabpagnacdmjnmplgfgfgkmdipfgcgni"}})
 
 # Your existing classification logic
 def classify(text, modelType: int) -> str:
@@ -11,7 +17,6 @@ def classify(text, modelType: int) -> str:
 		 )
 
 	if modelType == 0:
-		from openai import OpenAI
 		OpenAI.api_key = ""
 		client = OpenAI(api_key=OpenAI.api_key)
 
@@ -23,7 +28,6 @@ def classify(text, modelType: int) -> str:
 		return response.choices[0].message.content.strip()
 
 	elif modelType == 1:
-		import anthropic
 		client = anthropic.Anthropic(api_key="")
 
 		response = client.messages.create(
@@ -35,7 +39,6 @@ def classify(text, modelType: int) -> str:
 		return response.content[0].text.strip()
 
 	elif modelType == 2:
-		import google.generativeai as genai
 		genai.configure(api_key="")
 		model = genai.GenerativeModel("gemini-2.0-flash")
 		chat = model.start_chat()
@@ -52,6 +55,7 @@ def classify_scam():
 	scam_text = data.get("scam")
 	model = data.get("model")
 
+	
 	if not scam_text:
 		return jsonify({"error": "Missing 'scam' field."}), 400
 
@@ -70,6 +74,7 @@ def classify_scam():
 	except ValueError as e:
 		return jsonify({"error": str(e)}), 400
 	except Exception as e:
+		print(f"[ERROR] {e}")
 		return jsonify({"error": f"Classification failed: {str(e)}"}), 500
 
 	return jsonify({"spam_score": score})

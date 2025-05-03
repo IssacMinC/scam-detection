@@ -10,13 +10,32 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 async function checkForScam(emailData) {
-  const result = await mockModelAPI(emailData);
+  const scam = emailData.subject + " " + emailData.body
+  const result = await modelAPI(scam);
+  console.log(result)
   return result;
 }
 
-async function mockModelAPI(emailData) {
-  const text = (emailData.subject + " " + emailData.body).toLowerCase();
-  let prediction = Math.random();
+async function modelAPI(emailData) {
+  try {
+    const response = await fetch("http://localhost:5000/api/classify_scam", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ scam: emailData, model: 0 }),
+    });
 
-  return {prediction};
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error("Network response was not OK: " + errorText);
+    }
+
+    const prediction = await response.json();
+    return prediction;
+
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
 }
