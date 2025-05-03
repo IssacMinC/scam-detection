@@ -52,23 +52,31 @@
 
       chrome.runtime.sendMessage({type: "EMAIL_DATA", data: emailData}, (response) => {
         console.log("Got response back:", response);
-        if (response && response.prediction && response.prediction >= .5) {
-          injectWarningIcon(subjectElement, response.prediction);
+        if (response && response.prediction) {
+          updateScamBar(response.prediction);
         }
       });
 
     }, 500); 
   }
 
-  function injectWarningIcon(subjectElement, predictionType) {
-    if (!subjectElement.querySelector('span.scam-warning')) {
-      const warning = document.createElement('span');
-      warning.className = 'scam-warning';
-      warning.innerText = ' ⚠️';
-      warning.style.marginLeft = '8px';
-      warning.title = `Warning: ${predictionType} detected`;
-      subjectElement.appendChild(warning);
-    }
+  function updateScamBar(prediction) {
+      const bar = document.getElementById("scam-progress-bar");
+      if (!bar) return;
+    
+      // Clamp value between 0 and 1
+      const percentage = prediction * 100;
+      bar.style.width = percentage + "%";
+    
+      // Color scale:
+      // Green: 0–0.33, Yellow: 0.34–0.66, Red: 0.67–1
+      let color = "#4caf50"; // Green
+      if (prediction > 0.66) {
+        color = "#f44336"; // Red
+      } else if (prediction > 0.33) {
+        color = "#ff9800"; // Orange
+      }
+      bar.style.background = color;
   }
 
   const observer = new MutationObserver((mutations) => {
@@ -83,6 +91,52 @@
     childList: true,
     subtree: true
   });
+
+  const observer2 = new MutationObserver(() => {
+    const subjectElement = document.querySelector("h2.hP");
+  
+    if (subjectElement && !document.getElementById("scam-progress-wrapper")) {
+      // Create wrapper for label + bar
+      const wrapper = document.createElement("div");
+      wrapper.id = "scam-progress-wrapper";
+      wrapper.style.marginTop = "12px";
+      wrapper.style.fontFamily = "Arial, sans-serif";
+  
+      // Create label
+      const label = document.createElement("div");
+      label.textContent = "Scam Likelihood";
+      label.style.fontSize = "14px";
+      label.style.fontWeight = "bold";
+      label.style.marginBottom = "4px";
+  
+      // Create container for progress bar
+      const barContainer = document.createElement("div");
+      barContainer.style.width = "100%";
+      barContainer.style.height = "10px";
+      barContainer.style.background = "#ccc";
+      barContainer.style.borderRadius = "5px";
+      barContainer.style.overflow = "hidden";
+  
+      // Create progress bar
+      const bar = document.createElement("div");
+      bar.id = "scam-progress-bar";
+      bar.style.width = "0%";  // Set dynamically later
+      bar.style.height = "100%";
+      bar.style.background = "#f44336"; // red
+      bar.style.transition = "width 0.5s";
+  
+      // Assemble
+      barContainer.appendChild(bar);
+      wrapper.appendChild(label);
+      wrapper.appendChild(barContainer);
+  
+      // Inject below subject
+      subjectElement.parentNode.insertBefore(wrapper, subjectElement.nextSibling);
+  
+    }
+  });
+  
+  observer2.observe(document.body, { childList: true, subtree: true });
 
   // First initial load
   startMonitoringEmail();
