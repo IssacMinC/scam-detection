@@ -6,7 +6,7 @@ import anthropic
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/classify_scam": {"origins": "chrome-extension://gabpagnacdmjnmplgfgfgkmdipfgcgni"}})
+CORS(app, resources={r"/api/classify_scam": {"origins": ""}})
 
 # Your existing classification logic
 def classify(text, modelType: int) -> str:
