@@ -1,0 +1,11 @@
+flask
+openai
+anthropic
+google-generativeai
+transformers
+tensorflow
+nltk
+requests
+python-dotenv
+tf-keras
+python-dotenv
