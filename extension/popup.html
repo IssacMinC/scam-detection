@@ -3,19 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Email Scan Result</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 10px; width: 250px; }
-    textarea { width: 100%; height: 100px; margin-bottom: 10px; }
-    button { width: 100%; margin-bottom: 10px; }
-    #result { font-weight: bold; }
-  </style>
+  <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
   <h2>Scam Detection</h2>
   <textarea id="inputText" placeholder="Paste email or text here..."></textarea>
   <button id="checkButton">Check For Scam</button>
   <div id="result">Result: (none yet)</div>
-
+  <div id="barContainer">
+    <div id="scamBar"></div>
+  </div>
+  <label for="detectionModel">Detection Model</label>
+  <select id="detectionModel">
+    <option value="" selected>Ensemble</option>
+    <option value="0">ChatGPT</option>
+    <option value="1">Claude</option>
+    <option value="2">Gemini</option>
+    <option value="3">In-House</option>
+  </select>
+  <div id="loadingSpinner" class="spinner hidden"></div>
   <script src="popup.js"></script>
 </body>
 </html>

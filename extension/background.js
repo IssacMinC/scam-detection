@@ -7,24 +7,36 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
     return true;
   }
+
+  if (message.type === "DROPDOWN_SELECTION") {
+    chrome.storage.local.set({ selection: message.selection }, () => {
+      console.log("Background received selection: ", message.selection);
+    });
+    return true;
+  }
+  
 });
 
 async function checkForScam(emailData) {
   const scam = emailData.subject + " " + emailData.body
-  const result = await modelAPI(scam);
-  console.log(result)
+  const selection = await new Promise((resolve) => {
+    chrome.storage.local.get("selection", (data) => {
+      resolve(data.selection);
+    });
+  });
+  const result = await modelAPI(scam, selection);
   return result;
 }
 
-async function modelAPI(emailData) {
+async function modelAPI(emailData, selection) {
   try {
     const response = await fetch("http://localhost:5000/api/classify_scam", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ scam: emailData, model: 0 }),
-    });
+      body: JSON.stringify({ scam: emailData, model: selection }),
+    }); 
 
     if (!response.ok) {
       const errorText = await response.text();
