@@ -60,7 +60,7 @@ def classify_scam():
 		return jsonify({"error": "Missing 'scam' field."}), 400
 
 	try:
-		if model is not None:
+		if model == "":
 			model = int(model)
 			score_str = classify(scam_text, model)
 			score = round(float(score_str), 2)
