@@ -3,7 +3,8 @@ CS6320
 NLP Project for scam detection in emails. 
 
 ## Video Presentation link
-<INSERT>
+5 minute version - https://www.youtube.com/watch?v=Sdxin4F8GAI
+Extended version - https://www.youtube.com/watch?v=tWU3vJbvZlw
 
 ## Installation
 - requires API keys for Claude, Gemini, and OpenAI
@@ -12,7 +13,6 @@ NLP Project for scam detection in emails.
 
 ## Usage
 Chrome extension to be used on Gmail.
-<INSERT>
 
 ## Features
 - allows the user to an email and receive a the likelihood (float between 0 and 1) that it is a scam
