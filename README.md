@@ -26,3 +26,9 @@ Chrome extension to be used on Gmail.
 
 ## Backend installation and setup
 - Install "requirements.txt" libraries using python version 3.12.3 -> Execute "python3 backend.py" -> Starts up server and handles requests
+
+## Frontend installation and setup
+- No installations required for frontend
+- Requires chrome
+- Navigate to chrome://extensions, click load unpacked, and select extension folder
+- Only works for gmail inboxes
