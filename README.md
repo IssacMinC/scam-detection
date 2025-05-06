@@ -23,3 +23,6 @@ Chrome extension to be used on Gmail.
 
 ## Production Version 
 - Lite repo version for integration with Render hosting service: https://github.com/KirinCSU/ScamDetectionLite
+
+## Backend installation and setup
+- Install "requirements.txt" libraries using python version 3.12.3 -> Execute "python3 backend.py" -> Starts up server and handles requests
