@@ -20,3 +20,6 @@ Chrome extension to be used on Gmail.
 - integrates pretrained Claude API
 - integrates pretrained OpenAI API
 - integrates pretrained Gemini API
+
+## Production Version 
+- Lite repo version for integration with Render hosting service: https://github.com/KirinCSU/ScamDetectionLite
