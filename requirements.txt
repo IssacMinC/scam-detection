@@ -9,3 +9,4 @@ requests
 python-dotenv
 tf-keras
 gunicorn
+flask_cors

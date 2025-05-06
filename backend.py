@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 import tensorflow as tf
 from transformers import TFBertForSequenceClassification, BertTokenizerFast
 
@@ -30,7 +32,10 @@ def predict_email(text):
     preds = sigmoid(probs)
     return float(preds[0][0])
 
+EXTENSION_ID = os.environ.get("EXTENSION_ID")
+
 app = Flask(__name__)
+CORS(app, origins=[f"chrome-extension://{EXTENSION_ID}"])
 
 # Your existing classification logic
 def classify(text, modelType: int) -> str:
@@ -89,7 +94,7 @@ def classify_scam():
         return jsonify({"error": "Missing 'scam' field."}), 400
 
     try:
-        if model is not None:
+        if model != "":
             model = int(model)
             score_str = classify(scam_text, model)
             score = round(float(score_str), 2)
